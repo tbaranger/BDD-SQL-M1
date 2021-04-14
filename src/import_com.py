@@ -8,7 +8,7 @@ import deconnexion
 #Tentative de connexion
 cur,conn = connexion.connect()
 
-with open('commune.csv', newline='', encoding='latin-1') as f:
+with open('../data/commune.csv', newline='', encoding='latin-1') as f:
 	cur.copy_from(file=f, table='commune', sep=',', columns=('codecom', 'codedep', 'nomcom'))
 
 conn.commit()
