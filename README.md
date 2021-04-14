@@ -12,7 +12,7 @@ Les données qu'il nous était proposé d'utiliser pour ce projet sont les donn�
 Concernant les données liées aux départements et aux régions, il s'agit des statistiques intitulées <a href="https://www.insee.fr/fr/statistiques/2512993">Développement durable&nbsp;: 20 indicateurs régionaux et départementaux</a> (source : Insee), qui regroupent des indicateurs économiques (e.g. taux de chômage), sociaux, environnementaux, et autres.
 
 ### Modèle relationnel
-Voici une illustration avec Libreoffice Base du modèle relationnel que nous avons finalement utilisé pour représenter ces données.
+Voici une illustration avec LibreOffice Base du modèle relationnel que nous avons finalement utilisé pour représenter ces données.
 <img src="images/schema.png" alt="modèle relationnel"/>
 
 ## Contenu
