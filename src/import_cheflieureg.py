@@ -17,7 +17,7 @@ conn.commit()
 cur.execute("select nomreg, region.codereg, nomcom from cheflieureg, region, commune where region.codereg = cheflieureg.codereg and cheflieureg.codecom = commune.codecom ORDER BY codedep;")
 rows = cur.fetchall()
 
-page = 'Liste des chefs lieux par département.\n'
+page = 'Liste des chefs lieux par région.\n'
 for d in rows:
 	page += d["nomreg"] + " (" + d["codereg"] + ") : " + d["nomcom"] + "\n"
 
