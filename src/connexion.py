@@ -17,6 +17,3 @@ def connect():
         # Préparation de l'exécution des requêtes (à ne faire qu'une fois)
         cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         return(cur,conn)
-
-
-        
