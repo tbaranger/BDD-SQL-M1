@@ -25,6 +25,3 @@ for d in rows:
 print(page)
 # Fermeture de la connexion
 deconnexion.disconnect(cur,conn)
-
-
-
