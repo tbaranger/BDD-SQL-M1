@@ -1,0 +1,16 @@
+-- table labelstats
+
+INSERT INTO labelstats(codestat, description) values ('EspVieH', 'Espérance de vie des hommes à la naissance (années)');
+INSERT INTO labelstats(codestat, description) values ('EspVieF', 'Espérance de vie des femmes à la naissance (années)');
+
+INSERT INTO labelstats(codestat, description) values ('TauxEmp', 'Taux d''emploi (%)');
+
+INSERT INTO labelstats(codestat, description) values ('CommuteVoit', 'Part des travailleurs qui se rendent au travail en voiture (%)');
+INSERT INTO labelstats(codestat, description) values ('CommuteTrsp', 'Part des travailleurs qui se rendent au travail en transport en commun (%)');
+INSERT INTO labelstats(codestat, description) values ('CommuteAutr', 'Part des travailleurs qui se rendent au travail par un autre moyen (%)');
+
+INSERT INTO labelstats(codestat, description) values ('Pop', 'Population');
+
+INSERT INTO labelstats(codestat, description) values ('Nais', 'Nombre de naissances cumulées entre les deux dernières années présentes dans la table. Par exemple, si on dispose d''une valeur 2012 et 2017, alors pour l''année 2017, cette statistique correspond au nombre de naissances cumulées entre 2012 et 2017');
+
+INSERT INTO labelstats(codestat, description) values ('Deces', 'Nombre de décès cumulés entre les deux dernières années présentes dans la table. Par exemple, si on dispose d''une valeur 2012 et 2017, alors pour l''année 2017, cette statistique correspond au nombre de décès cumulés entre 2012 et 2017');
