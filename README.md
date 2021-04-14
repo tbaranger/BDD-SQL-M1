@@ -1,7 +1,7 @@
 # Bases de Données Avancées
 *Théophile Baranger & Erwan Leroux*
 
-Ce dépôt contient le code source pour la création et l'administration d'une base de données SQL sous PostgreSQL en Python avec Psycopg2 dans le cadre d'un projet du cours de Bases de Données Avancées en Master 1 à l'Université de Bordeaux, cours assuré par Bruno Pinaud en 2020/2021. 
+Ce dépôt contient le code source pour la création et l'administration d'une base de données SQL sous PostgreSQL en Python avec psycopg2, dans le cadre d'un projet du cours de Bases de Données Avancées en Master 1 à l'Université de Bordeaux, assuré par Bruno Pinaud en 2020/2021. 
 
 ## Introduction
 L'objectif de ce projet était d'apprendre à manipuler une base de données dans un langage de plus haut niveau, ici Python, et d'illustrer certaines des propriétés liées aux requêtes telle que l'optimisation du temps de calcul grâce à l'utilisation d'index. La modélisation de la base de données ainsi que la création des fichiers d'import de données ont aussi représenté une part importante du travail total. 
