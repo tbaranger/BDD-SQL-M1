@@ -52,7 +52,7 @@ create table statsreg (
 	IdStat SERIAL CONSTRAINT statsreg_foreign_labelstats REFERENCES labelstats (IdStat) ON UPDATE CASCADE,
 	Valeur NUMERIC CONSTRAINT valeur_not_null NOT NULL,
 	Annee NUMERIC(4) CONSTRAINT annee_not_null NOT NULL,
-	PRIMARY KEY (CodeReg, IdStat),
+	PRIMARY KEY (CodeReg, IdStat, Annee),
 	CONSTRAINT annee_possible CHECK (Annee BETWEEN 1800 and EXTRACT(YEAR FROM now()))
 );
 
@@ -63,7 +63,7 @@ create table statsdep (
 	IdStat SERIAL CONSTRAINT statsreg_foreign_labelstats REFERENCES labelstats (IdStat) ON UPDATE CASCADE,
 	Valeur NUMERIC CONSTRAINT valeur_not_null NOT NULL,
 	Annee NUMERIC(4) CONSTRAINT annee_not_null NOT NULL,
-	PRIMARY KEY (CodeDep, IdStat),
+	PRIMARY KEY (CodeDep, IdStat, Annee),
 	CONSTRAINT annee_possible CHECK (Annee BETWEEN 1800 and EXTRACT(YEAR FROM now()))
 );
 
@@ -74,7 +74,7 @@ create table statscom (
 	IdStat SERIAL CONSTRAINT statsreg_foreign_labelstats REFERENCES labelstats (IdStat) ON UPDATE CASCADE,
 	Valeur NUMERIC CONSTRAINT valeur_not_null NOT NULL,
 	Annee NUMERIC(4) CONSTRAINT annee_not_null NOT NULL,
-	PRIMARY KEY (CodeCom, IdStat),
+	PRIMARY KEY (CodeCom, IdStat, Annee),
 	CONSTRAINT annee_possible CHECK (Annee BETWEEN 1800 and EXTRACT(YEAR FROM now()))
 );
 
