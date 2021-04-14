@@ -6,4 +6,3 @@ def disconnect(cur,conn):
     # Fermeture de la connexion
     cur.close()
     conn.close()
-
