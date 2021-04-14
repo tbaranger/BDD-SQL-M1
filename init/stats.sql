@@ -1,5 +1,4 @@
 -- table labelstats
-
 INSERT INTO labelstats(codestat, description) values ('EspVieH', 'Espérance de vie des hommes à la naissance (années)');
 INSERT INTO labelstats(codestat, description) values ('EspVieF', 'Espérance de vie des femmes à la naissance (années)');
 INSERT INTO labelstats(codestat, description) values ('TauxEmp', 'Taux d''emploi (%)');
