@@ -17,3 +17,20 @@ Voici une illustration avec LibreOffice Base du modèle relationnel que nous avo
 
 ## Contenu
 Les fichiers "tables.sql" et "stats.sql" permettent de créer les tables et d'insérer les méta-données concernant les statistiques. Ensuite, l'import des données provenant des fichiers CSV se fait directement à partir des scripts Python se trouvant dans le fichier 'src'. La connexion/déconnexion à la base de données est effectuée grâce aux fichiers 'connexion.py' et 'deconnexion.py', que l'on importe ensuite dans tous les autres fichiers d'exécutions de requêtes. 
+
+## Création de la base
+Pour créer et importer les données dans la base, il est nécessaire de tout d'abord exécuter les fichiers "tables.sql" et "stats.sql". Puis, exécuter les scripts dans l'ordre suivant :
+
+* import_reg.py
+* import_dep.py
+* import_com.py
+* import_cheflieureg.py
+* import_cheflieudep.py
+* import_statsreg.py
+* import_statsdep.py
+* import_pop.py
+* import_superf.py
+
+### Travail
+
+Les fichiers commençant par "questionX" contiennent des scripts permettant de répondre aux questions posées dans le sujet. Par exemple, le fichier "question1_requetes.py" permet d'interroger la base en sélectionnant une région, puis un département, et finalement d'afficher diverses statistiques sur ce département.
