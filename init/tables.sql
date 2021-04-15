@@ -20,15 +20,15 @@ create table commune (
 
 -- table cheflieureg
 create table cheflieureg (
-	CodeReg VARCHAR(2) CONSTRAINT cheflieureg_foreign_region REFERENCES region (CodeReg) ON UPDATE CASCADE ON DELETE CASCADE,
-	CodeCom VARCHAR(5) CONSTRAINT cheflieureg_foreign_commune REFERENCES commune (CodeCom) ON UPDATE CASCADE ON DELETE CASCADE,
+	CodeReg VARCHAR(2) CONSTRAINT codereg_unique UNIQUE CONSTRAINT cheflieureg_foreign_region REFERENCES region (CodeReg) ON UPDATE CASCADE ON DELETE CASCADE,
+	CodeCom VARCHAR(5) CONSTRAINT codecom_unique UNIQUE CONSTRAINT cheflieureg_foreign_commune REFERENCES commune (CodeCom) ON UPDATE CASCADE ON DELETE CASCADE,
 	PRIMARY KEY (CodeReg, CodeCom)
 );
 
 -- table cheflieudep
 create table cheflieudep (
-	CodeDep VARCHAR(3) CONSTRAINT cheflieudep_foreign_departement REFERENCES departement (CodeDep) ON UPDATE CASCADE ON DELETE CASCADE,
-	CodeCom VARCHAR(5) CONSTRAINT cheflieureg_foreign_commune REFERENCES commune (CodeCom) ON UPDATE CASCADE ON DELETE CASCADE,
+	CodeDep VARCHAR(3) CONSTRAINT codedep_unique UNIQUE CONSTRAINT cheflieudep_foreign_departement REFERENCES departement (CodeDep) ON UPDATE CASCADE ON DELETE CASCADE,
+	CodeCom VARCHAR(5) CONSTRAINT codecom_unique UNIQUE CONSTRAINT cheflieureg_foreign_commune REFERENCES commune (CodeCom) ON UPDATE CASCADE ON DELETE CASCADE,
 	PRIMARY KEY (CodeDep, CodeCom)
 );
 
