@@ -12,7 +12,7 @@ def connect():
         except Exception as e:
                 exit("Connexion impossible à la base de données: " + str(e))
 
-        print('Connecté à la base de données')
+        print('Connecté à la base de données.')
 
         # Préparation de l'exécution des requêtes (à ne faire qu'une fois)
         cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
