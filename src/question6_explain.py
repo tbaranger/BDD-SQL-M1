@@ -8,67 +8,83 @@ import deconnexion
 #Tentative de connexion
 cur,conn = connexion.connect()
 
-# Récupération de la liste des régions
-cur.execute("EXPLAIN SELECT * from region;")
-rows = cur.fetchall()
+## Partie 1 - Analyse théorique des requêtes avec la commande EXPLAIN
 
-## Requêtes à analyser
-# Chef-lieu
-cur.execute("EXPLAIN SELECT nomcom FROM cheflieudep, commune WHERE cheflieudep.codecom = commune.codecom AND cheflieudep.codedep = '33';")
+print("\nQuestion 6.1 - Plans d'éxécution pour différentes requêtes.\n")
+# Récupération de la liste des communes
+query = "EXPLAIN SELECT * FROM commune;"
+cur.execute(query)
 rows = cur.fetchall()
-print("- Chef-lieu : {}".format(rows[0]['nomcom']))
-
-# Superficie (somme des superficie des communes)
-# Ici, on part du principe que la superficie n'est disponible que pour une année
-cur.execute("EXPLAIN SELECT SUM(valeur) as superficie FROM commune, statscom, labelstats WHERE commune.codedep = '33' AND statscom.codecom = commune.codecom AND statscom.idstat = labelstats.idstat AND labelstats.codestat = 'Superf';")
-rows = cur.fetchall()
-print("- Superficie : {}km²".format(rows[0]['superficie']))
-
-# Population totale en 2017
-# Ici, on part du principe que l'on connait l'année du dernier recensement
-cur.execute("EXPLAIN SELECT SUM(valeur) as population FROM commune, statscom, labelstats WHERE commune.codedep = '33' AND statscom.codecom = commune.codecom AND statscom.idstat = labelstats.idstat AND labelstats.codestat = 'Pop' AND annee = 2017;")
-rows = cur.fetchall()
-print("- Population totale en 2017 : {} habitants".format(rows[0]['population']))
-
-# Commune la plus peuplée en 2017
-command = (	"EXPLAIN SELECT nomcom, valeur AS population "
-			"FROM commune, statscom, labelstats "
-			"WHERE commune.codedep = '33' "
-			"AND statscom.codecom = commune.codecom "
-			"AND statscom.idstat = labelstats.idstat "
-			"AND labelstats.codestat = 'Pop' "
-			"AND annee = 2017 "
-			"AND valeur >= "
-				"(SELECT MAX(valeur) FROM commune, statscom, labelstats WHERE commune.codedep = '33' AND statscom.codecom = commune.codecom AND statscom.idstat = labelstats.idstat AND codestat = 'Pop' AND annee = 2017);")
-cur.execute(command)
-rows = cur.fetchall()
+print(query)
 for d in rows:
-	print("- Commune la plus peuplée en 2017 : {} ({} habitants)".format(d['nomcom'], d['population']))
+	print(d)
+print('\n-----------------------------')
 
-# Commune la moins peuplée en 2017
-command = (	"EXPLAIN SELECT nomcom, valeur AS population "
-			"FROM commune, statscom, labelstats "
-			"WHERE commune.codedep = '33' "
-			"AND statscom.codecom = commune.codecom "
-			"AND statscom.idstat = labelstats.idstat "
-			"AND labelstats.codestat = 'Pop' "
-			"AND annee = 2017 "
-			"AND valeur <= "
-				"(SELECT MIN(valeur) FROM commune, statscom, labelstats WHERE commune.codedep = '33' AND statscom.codecom = commune.codecom AND statscom.idstat = labelstats.idstat AND codestat = 'Pop' AND annee = 2017);")
-cur.execute(command)
+# Récupération de la liste des communes de Gironde
+query = "EXPLAIN SELECT * FROM commune WHERE codedep = '33';"
+cur.execute(query)
 rows = cur.fetchall()
+print(query)
 for d in rows:
-	print("- Commune la moins peuplée en 2017 : {} ({} habitants)\n".format(d['nomcom'], d['population']))
+	print(d)
+print('\n-----------------------------')
 
-# Liste des indicateurs départementaux
-print("Liste des indicateurs départementaux pour le département Gironde :\n")
-
-# Requête
-cur.execute("EXPLAIN SELECT departement.codedep, nomdep, labelstats.idstat, valeur, annee, description FROM statsdep, labelstats, departement WHERE statsdep.codedep = departement.codedep AND nomdep = 'Gironde' AND labelstats.idstat = statsdep.idstat ORDER BY annee ASC, idstat ASC;")
+# Récupération de la liste des communes de Gironde par jointure avec departement
+query = "EXPLAIN SELECT codecom, nomcom, commune.codedep \n\tFROM commune, departement \n\tWHERE commune.codedep = departement.codedep \n\tAND nomdep = 'Gironde';\n"
+cur.execute(query)
 rows = cur.fetchall()
-
+print(query)
 for d in rows:
-	print(d['description'] + " en " + str(d['annee']) + " : " + str(d['valeur']))
+	print(d)
+print('\n-----------------------------')
+
+# Récupération de la liste des communes de Gironde par tri sur codecom
+query = "EXPLAIN SELECT * \n\tFROM commune \n\tWHERE codecom BETWEEN '33000' AND '33999';\n"
+cur.execute(query)
+rows = cur.fetchall()
+print(query)
+for d in rows:
+	print(d)
+print('\n-----------------------------')
+
+## Partie 2- Comparaison des temps d'exécution
+
+print("\nQuestion 6.2 - Comparaison des temps d'exécution.\n")
+# Récupération de la liste des communes
+query = "EXPLAIN ANALYZE SELECT * FROM commune;"
+cur.execute(query)
+rows = cur.fetchall()
+print(query)
+for d in rows:
+	print(d)
+print('\n-----------------------------')
+
+# Récupération de la liste des communes de Gironde
+query = "EXPLAIN ANALYZE SELECT * FROM commune WHERE codedep = '33';"
+cur.execute(query)
+rows = cur.fetchall()
+print(query)
+for d in rows:
+	print(d)
+print('\n-----------------------------')
+
+# Récupération de la liste des communes de Gironde par jointure avec departement
+query = "EXPLAIN ANALYZE SELECT codecom, nomcom, commune.codedep \n\tFROM commune, departement \n\tWHERE commune.codedep = departement.codedep \n\tAND nomdep = 'Gironde';\n"
+cur.execute(query)
+rows = cur.fetchall()
+print(query)
+for d in rows:
+	print(d)
+print('\n-----------------------------')
+
+# Récupération de la liste des communes de Gironde par tri sur codecom
+query = "EXPLAIN ANALYZE SELECT * \n\tFROM commune \n\tWHERE codecom BETWEEN '33000' AND '33999';\n"
+cur.execute(query)
+rows = cur.fetchall()
+print(query)
+for d in rows:
+	print(d)
+print('\n-----------------------------')
 
 # Fermeture de la connexion
 deconnexion.disconnect(cur,conn)
