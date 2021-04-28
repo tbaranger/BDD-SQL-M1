@@ -130,7 +130,7 @@ Planning Time: 0.105 ms
 Execution Time: 4.559 ms
 ```
 
-###### Requête 3
+###### Requête 4
 ```
 EXPLAIN ANALYZE SELECT * 
 	FROM commune 
