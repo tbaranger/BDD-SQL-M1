@@ -35,7 +35,7 @@ Pour créer et importer les données dans la base, il est nécessaire de tout d'
 
 Les fichiers commençant par "questionX" contiennent des scripts permettant de répondre aux questions posées dans le sujet. Par exemple, le fichier "question1_requetes.py" permet d'interroger la base en sélectionnant une région, puis un département, et finalement d'afficher diverses statistiques sur ce département.
 
-#### Question 6 - Plans d’exécutions
+#### Plans d’exécutions
 
 ##### Analyse des plans d’exécution
 
