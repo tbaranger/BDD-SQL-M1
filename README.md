@@ -31,7 +31,7 @@ Pour créer et importer les données dans la base, il est nécessaire de tout d'
 * import_pop.py
 * import_superf.py
 
-On peut également importer toutes les données à la fois en lançant le script suivant :
+On peut également importer toutes les données à la fois en lançant le script suivant&nbsp;:
 
 * import.py
 
