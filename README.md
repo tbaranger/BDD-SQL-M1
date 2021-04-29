@@ -45,7 +45,7 @@ Les fichiers commençant par "questionX" contiennent des scripts permettant de r
 
 *Fichier 'question1_requetes.py'*
 
-Nous avons choisi pour d’illustrer l’instanciation de notre base de données en construisant un script qui permet à l’utilisateur de récolter diverses statistiques sur le département de son choix. Ainsi, en lançant le script ‘question1_requetes.py’, l’utilisateur est invité tout d’abord à choisir une région, puis un département, et enfin la liste de statistiques concernant ce département est fournie. Certaines de ces statistiques sont stockées dans la base, et d’autres telle que la population, sont calculées à la volée.
+Nous avons choisi d’illustrer l’instanciation de notre base de données en construisant un script qui permet à l’utilisateur de récolter diverses statistiques sur le département de son choix. Ainsi, en lançant le script ‘question1_requetes.py’, l’utilisateur est invité tout d’abord à choisir une région, puis un département, et enfin la liste de statistiques concernant ce département est fournie. Certaines de ces statistiques sont stockées dans la base, et d’autres telle que la population, sont calculées à la volée.
 
 ##### Choix de la région
 
