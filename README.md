@@ -19,7 +19,7 @@ Voici une illustration avec LibreOffice Base du modèle relationnel que nous avo
 Les fichiers "tables.sql" et "stats.sql" permettent de créer les tables et d'insérer les méta-données concernant les statistiques. Ensuite, l'import des données provenant des fichiers CSV se fait directement à partir des scripts Python se trouvant dans le fichier 'src'. La connexion/déconnexion à la base de données est effectuée grâce aux fichiers 'connexion.py' et 'deconnexion.py', que l'on importe ensuite dans tous les autres fichiers d'exécutions de requêtes. 
 
 ## Création de la base
-Pour créer et importer les données dans la base, il est nécessaire de tout d'abord exécuter les fichiers "tables.sql" et "stats.sql". Puis, exécuter les scripts dans l'ordre suivant :
+Pour créer et importer les données dans la base, il est nécessaire de tout d'abord exécuter les fichiers "tables.sql" et "stats.sql". Ensuite, choisir l'une de deux méthodes pour importer les données. Soit exécuter les fichiers suivants dans l'ordre, ce qui permet de vérifier l'import instantanément par des requêtes intégrées aux scripts.
 
 * import_reg.py
 * import_dep.py
@@ -31,11 +31,116 @@ Pour créer et importer les données dans la base, il est nécessaire de tout d'
 * import_pop.py
 * import_superf.py
 
+On peut également importer toutes les données à la fois en lançant le script suivant :
+
+* import.py
+
+Mais alors aucune requête de vérification n'est lancée. Il faut alors s'assurer que les données ont bien été importées.
+
 ### Travail
 
 Les fichiers commençant par "questionX" contiennent des scripts permettant de répondre aux questions posées dans le sujet. Par exemple, le fichier "question1_requetes.py" permet d'interroger la base en sélectionnant une région, puis un département, et finalement d'afficher diverses statistiques sur ce département.
 
+#### Requêtes
+
+*Fichier 'question1_requetes.py'*
+
+Nous avons choisi pour d’illustrer l’instanciation de notre base de données en construisant un script qui permet à l’utilisateur de récolter diverses statistiques sur le département de son choix. Ainsi, en lançant le script ‘question1_requetes.py’, l’utilisateur est invité tout d’abord à choisir une région, puis un département, et enfin la liste de statistiques concernant ce département est fournie. Certaines de ces statistiques sont stockées dans la base, et d’autres telle que la population, sont calculées à la volée.
+
+##### Choix de la région
+
+En exécutant le script ‘question1_requetes.py’, l’utilisateur est invité via ligne de commande à choisir une région, en entrant le code correspondant.
+
+```
+Liste des régions de France :
+Code 01 : Guadeloupe
+Code 02 : Martinique
+Code 03 : Guyane
+Code 04 : La Réunion
+Code 06 : Mayotte
+Code 11 : Île-de-France
+Code 24 : Centre-Val de Loire
+Code 27 : Bourgogne-Franche-Comté
+Code 28 : Normandie
+Code 32 : Hauts-de-France
+Code 44 : Grand Est
+Code 52 : Pays de la Loire
+Code 53 : Bretagne
+Code 75 : Nouvelle-Aquitaine
+Code 76 : Occitanie
+Code 84 : Auvergne-Rhône-Alpes
+Code 93 : Provence-Alpes-Côte d'Azur
+Code 94 : Corse
+
+Entrez le code de la région souhaitée : 
+```
+Si un code incorrect est entré trois fois, alors la connexion à la base de données est interrompue et le programme se termine.
+
+##### Choix du département
+
+Supposons que l’utilisateur ait choisi le code région ‘75’ pour la Nouvelle-Aquitaine. Alors il est alors invité à choisir un département.
+
+```
+Liste des départements de Nouvelle-Aquitaine :
+Code 16 : Charente
+Code 17 : Charente-Maritime
+Code 19 : Corrèze
+Code 23 : Creuse
+Code 24 : Dordogne
+Code 33 : Gironde
+Code 40 : Landes
+Code 47 : Lot-et-Garonne
+Code 64 : Pyrénées-Atlantiques
+Code 79 : Deux-Sèvres
+Code 86 : Vienne
+Code 87 : Haute-Vienne
+
+Entrez le code du département souhaité :
+```
+
+##### Statistiques du département
+
+Supposons pour illustrer les requêtes, que le département choisi soit le département ‘33’, la Gironde. Le programme retourne alors la liste de statistiques suivantes :
+
+```
+Vous avez choisi le département 33 : Gironde
+
+Voici quelques statistiques concernant le département Gironde :
+
+- Chef-lieu : Bordeaux
+- Superficie : 9978km²
+- Population totale en 2017 : 1583384 habitants
+- Commune la plus peuplée en 2017 : Bordeaux (254436 habitants)
+- Commune la moins peuplée en 2017 : Bossugan (39 habitants)
+
+Liste des indicateurs départementaux pour le département : Gironde
+
+Taux d'emploi (%) en 2009 : 63.6
+Part des travailleurs qui se rendent au travail en voiture (%) en 2009 : 76.0
+Part des travailleurs qui se rendent au travail en transport en commun (%) en 2009 : 9.7
+Part des travailleurs qui se rendent au travail par un autre moyen (%) en 2009 : 14.3
+Espérance de vie des hommes à la naissance (années) en 2010 : 78.5
+Espérance de vie des femmes à la naissance (années) en 2010 : 85.0
+Taux d'emploi (%) en 2014 : 63.5
+Part des travailleurs qui se rendent au travail en voiture (%) en 2014 : 75.0
+Part des travailleurs qui se rendent au travail en transport en commun (%) en 2014 : 11.1
+Part des travailleurs qui se rendent au travail par un autre moyen (%) en 2014 : 13.9
+Espérance de vie des hommes à la naissance (années) en 2015 : 79.6
+Espérance de vie des femmes à la naissance (années) en 2015 : 85.5
+```
+La liste des indicateurs est stockée dans la base directement, tandis que les premières statistiques sont calculées à la volée.
+
+#### Vues
+
+*Fichier 'question2_vues.py'*
+
+#### Triggers
+
+*Fichier 'question3_triggers.py'*
+
 #### Plans d’exécutions
+
+*Fichier 'question6_explain.py'*
 
 ##### Analyse des plans d’exécution
 
