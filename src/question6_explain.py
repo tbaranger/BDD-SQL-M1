@@ -10,7 +10,7 @@ cur,conn = connexion.connect()
 
 ## Partie 1 - Analyse théorique des requêtes avec la commande EXPLAIN
 
-print("\nQuestion 6.1 - Plans d'éxécution pour différentes requêtes.\n")
+print("\nQuestion 6.1 - Plans d'exécution pour différentes requêtes.\n")
 # Récupération de la liste des communes
 query = "EXPLAIN SELECT * FROM commune;"
 cur.execute(query)
