@@ -233,21 +233,21 @@ On s’intéresse enfin à une requête plus complexe, où plusieurs jointures s
 ###### Requête 5
 ```
 EXPLAIN SELECT nomcom, valeur AS population 
-FROM commune, statscom, labelstats 
-WHERE commune.codedep = '33' 
-AND statscom.codecom = commune.codecom 
-AND statscom.idstat = labelstats.idstat 
-AND labelstats.codestat = 'Pop' 
-AND annee = 2017 
-AND valeur >= (SELECT MAX(valeur) 
-FROM commune, statscom, labelstats 
-WHERE commune.codedep = '33' 
-AND statscom.codecom = commune.codecom 
-AND statscom.idstat = labelstats.idstat 
-AND codestat = 'Pop' 
-AND annee = 2017);
+	FROM commune, statscom, labelstats 
+	WHERE commune.codedep = '33' 
+	AND statscom.codecom = commune.codecom 
+	AND statscom.idstat = labelstats.idstat 
+	AND labelstats.codestat = 'Pop' 
+	AND annee = 2017 
+	AND valeur >= (SELECT MAX(valeur) 
+		FROM commune, statscom, labelstats 
+		WHERE commune.codedep = '33' 
+		AND statscom.codecom = commune.codecom 
+		AND statscom.idstat = labelstats.idstat 
+		AND codestat = 'Pop' 
+		AND annee = 2017);
 
-QUERY PLAN 
+							QUERY PLAN 
 ---------------------------------------------------------------------------------------------------------------------------
 Nested Loop  (cost=4973.34..9942.56 rows=1 width=18)
   Join Filter: (statscom.idstat = labelstats.idstat)
@@ -323,19 +323,20 @@ Execution Time: 0.165 ms
 ###### Requête 5
 ```
 EXPLAIN ANALYZE SELECT nomcom, valeur AS population 
-FROM commune, statscom, labelstats 
-WHERE commune.codedep = '33' 
-AND statscom.codecom = commune.codecom 
-AND statscom.idstat = labelstats.idstat 
-AND labelstats.codestat = 'Pop' 
-AND annee = 2017 
-AND valeur >= (SELECT MAX(valeur) 
-FROM commune, statscom, labelstats 
-WHERE commune.codedep = '33' 
-AND statscom.codecom = commune.codecom 
-AND statscom.idstat = labelstats.idstat 
-AND codestat = 'Pop' 
-AND annee = 2017);
+	FROM commune, statscom, labelstats 
+	WHERE commune.codedep = '33' 
+	AND statscom.codecom = commune.codecom 
+	AND statscom.idstat = labelstats.idstat 
+	AND labelstats.codestat = 'Pop' 
+	AND annee = 2017 
+	AND valeur >= (SELECT MAX(valeur) 
+		FROM commune, statscom, labelstats 
+		WHERE commune.codedep = '33' 
+		AND statscom.codecom = commune.codecom 
+		AND statscom.idstat = labelstats.idstat 
+		AND codestat = 'Pop' 
+		AND annee = 2017);
+		
 Nested Loop
   Join Filter: (statscom.idstat = labelstats.idstat)
   InitPlan 1 (returns $1)
@@ -366,7 +367,7 @@ Execution Time: 8.140 ms
 
 Pour cette dernière requête, on a omit les détails concernant les coûts des diverses opérations pour une meilleure lisibilité.
 
-On peut les représenter les temps d’exécution de façon plus concise dans le tableau suivant&nbsp;:
+On regroupe les temps d’exécution dans le tableau suivant&nbsp;:
 
 | Requête       | Temps d’exécution (ms) | 
 | ------------- |:----------------------:| 
@@ -377,5 +378,3 @@ On peut les représenter les temps d’exécution de façon plus concise dans le
 | Requête 5     |         8.140          |
 
 On remarque que parmi les 4 premières requêtes, la requête qui prend le moins de temps à exécuter est celle où l’on utilise un index. En effet, on avait vu que son coût théorique était bien inférieur à celui des autres requêtes. Cela se confirme avec le temps d’exécution qui est environ 20 fois inférieur à celui des autres. On note également que le temps d’exécution de la jointure est plus long. La requête 5, où l’on effectue plusieurs jointures est sans surprise la requête dont l’exécution prend le plus de temps.
-
-
