@@ -151,6 +151,14 @@ Nous ne sommes pas allés plus loin par manque de temps, mais on peut générali
 
 *Fichier 'question3_triggers.py'*
 
+On souhaite dans cette question créer des triggers qui empêchent les commandes <code>INSERT</code>, <code>DELETE</code> et <code>UPDATE</code>. En PostgreSQL, on ne peut construire de trigger sans procédure stockée. Par conséquent,  nous avons commencé par écrire une fonction <code>do_nothing</code> avant de s’intéresser aux triggers. Cette procédure nous permet de ne rien faire au lieu de faire les actions qui seraient demandées dans une requête.  
+
+Maintenant, on peut passer à la création des triggers. On a créé 3 triggers pour empêcher les actions <code>INSERT</code>, <code>DELETE</code> et <code>UPDATE</code> sur la table <code>region</code>, et trois autres pour bloquer ces actions mais sur la table <code>departement</code>.
+
+Enfin, les triggers sont déclenchés quand un utilisateur essaye de faire des actions sur la base. Avant que les actions <code>INSERT</code>, <code>DELETE</code> ou<code>UPDATE</code> ne soient effectuées. 
+
+Pour aller plus loin, il aurait été intéressant de créer des triggers avec des procédures stockées plus avancées pour réaliser des actions complexes.
+
 #### Plans d’exécutions
 
 *Fichier 'question6_explain.py'*
