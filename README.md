@@ -166,6 +166,8 @@ Pour aller plus loin, il aurait été intéressant de créer des triggers avec d
 ##### Analyse des plans d’exécution
 
 On s’intéresse dans cette question à la manière dont les requêtes sont planifiées par PostgreSQL. Pour plus de détails techniques, on se réfère à la <a href=”https://www.postgresql.org/docs/11/using-explain.html” >documentation postgresql</a>. Commençons par une requête très simple.
+
+###### Requête 1
 ```
 EXPLAIN SELECT * FROM commune;
 
@@ -178,6 +180,8 @@ Seq Scan on commune  (cost=0.00..811.51 rows=34951 width=22)
 Il n'y a pas de clause <code>WHERE</code>, donc PostgreSQL scanne les lignes de la table une par une à l’aide d’un plan séquentiel, d’où le <code>Seq Scan</code>. On voit que pour une telle requête, l’intégralité des 34951 entrées seront retournées, ce qui est parfaitement logique.  
 
 Regardons ce qu’il se passe lorsqu’on effectue un filtre, avec l’ajout d’une clause <code>WHERE</code>. Par exemple, si l’on souhaite récupérer les communes de Gironde.
+
+###### Requête 2
 ```
 EXPLAIN SELECT * FROM commune WHERE codedep = ‘33’;
 
@@ -190,6 +194,7 @@ Cette fois-ci, seulement 522 lignes sont retournées à l’exécution de cette 
 
 Voyons voir maintenant ce qu’il se passe si l’on va chercher les communes de Gironde en passant par le <code>nomdep</code> de la table <code>departement</code>, c’est-à-dire en effectuant une jointure.
 
+###### Requête 3
 ```
 EXPLAIN SELECT codecom, nomcom, commune.codedep 
 	FROM commune, departement 
@@ -206,10 +211,11 @@ Hash Join  (cost=2.28..909.38 rows=346 width=22)
               Filter: ((nomdep)::text = 'Gironde'::text)
 
 ```
-Ici PostgreSQL a choisi d’utiliser un <code>hash join</code>. Par cette méthode, une première table est stockée en mémoire dans une table de hachage. Puis, l’autre table est scannée à son tour. Enfin, on récupère dans la table de hachage les lignes qui coïncident. Par ailleurs, l’indentation témoigne du plan d’exécution. Le scan séquentiel de <code>departement</code> permet de construire la table de hachage. Puis cette dernière lit les lignes de l’autre scan avant de chercher les correspondances. On peut remarquer que cette fois-ci <code>rows</code> vaut 346. On a donc une moins bonne estimation qu’avec la requête précédente. Le coût augmente légèrement.  
+Ici PostgreSQL a choisi d’utiliser un <code>Hash Join</code>. Par cette méthode, une première table est stockée en mémoire dans une table de hachage. Puis, l’autre table est scannée à son tour. Enfin, on récupère dans la table de hachage les lignes qui coïncident. Par ailleurs, l’indentation témoigne du plan d’exécution. Le scan séquentiel de <code>departement</code> permet de construire la table de hachage. Puis cette dernière lit les lignes de l’autre scan avant de chercher les correspondances. On peut remarquer que cette fois-ci <code>rows</code> vaut 346. On a donc une moins bonne estimation qu’avec la requête précédente. Le coût augmente légèrement.  
 
 Finalement, si l’on veut récupérer ces communes en utilisant la clé primaire de <code>commune</code>, c’est-à-dire <code>codecom</code>, on obtient :
 
+###### Requête 4
 ```
 EXPLAIN SELECT * FROM commune 
 WHERE codecom BETWEEN '33000' AND '33999';
@@ -221,6 +227,50 @@ Index Scan using cle_commune on commune  (cost=0.29..8.59 rows=15 width=22)
 ```
 
 En effectuant la sélection sur la clé primaire (qui fonctionne alors comme un index), on remarque que le coût estimé est bien inférieure aux méthodes précédentes. En revanche, le nombre de lignes estimées est loin de la vérité.
+
+On s’intéresse enfin à une requête plus complexe, où plusieurs jointures sont nécessaires. En l’occurrence, on cherche la commune de Gironde la plus peuplée en 2017.
+
+###### Requête 5
+```
+EXPLAIN SELECT nomcom, valeur AS population 
+FROM commune, statscom, labelstats 
+WHERE commune.codedep = '33' 
+AND statscom.codecom = commune.codecom 
+AND statscom.idstat = labelstats.idstat 
+AND labelstats.codestat = 'Pop' 
+AND annee = 2017 
+AND valeur >= (SELECT MAX(valeur) 
+FROM commune, statscom, labelstats 
+WHERE commune.codedep = '33' 
+AND statscom.codecom = commune.codecom 
+AND statscom.idstat = labelstats.idstat 
+AND codestat = 'Pop' 
+AND annee = 2017);
+
+QUERY PLAN 
+---------------------------------------------------------------------------------------------------------------------------
+Nested Loop  (cost=4973.34..9942.56 rows=1 width=18)
+  Join Filter: (statscom.idstat = labelstats.idstat)
+  InitPlan 1 (returns $1)
+    ->  Aggregate  (cost=4972.76..4972.77 rows=1 width=32)
+          ->  Nested Loop  (cost=0.57..4972.76 rows=1 width=5)
+                Join Filter: (statscom_1.idstat = labelstats_1.idstat)
+                ->  Index Scan using codestat_unique on labelstats labelstats_1  (cost=0.15..8.17 rows=1 width=4)
+                      Index Cond: ((codestat)::text = 'Pop'::text)
+                ->  Nested Loop  (cost=0.42..4958.19 rows=512 width=9)
+                      ->  Seq Scan on commune commune_1  (cost=0.00..898.89 rows=517 width=6)
+                            Filter: ((codedep)::text = '33'::text)
+                      ->  Index Scan using statscom_pkey on statscom statscom_1  (cost=0.42..7.84 rows=1 width=15)
+                            Index Cond: (((codecom)::text = (commune_1.codecom)::text) AND (annee = '2017'::numeric))
+  ->  Index Scan using codestat_unique on labelstats  (cost=0.15..8.17 rows=1 width=4)
+        Index Cond: ((codestat)::text = 'Pop'::text)
+  ->  Nested Loop  (cost=0.42..4959.48 rows=171 width=22)
+        ->  Seq Scan on commune  (cost=0.00..898.89 rows=517 width=19)
+              Filter: ((codedep)::text = '33'::text)"]
+        ->  Index Scan using statscom_pkey on statscom  (cost=0.42..7.84 rows=1 width=15)
+              Index Cond: (((codecom)::text = (commune.codecom)::text) AND (annee = '2017'::numeric))
+              Filter: (valeur >= $1)
+```
 
 ##### Comparaison des temps d’exécution
 
@@ -268,14 +318,62 @@ Planning Time: 0.036 ms
 Execution Time: 0.165 ms
 ```
 
-On peut les représenter de façon plus concise dans le tableau suivant :
+###### Requête 5
+```
+EXPLAIN ANALYZE SELECT nomcom, valeur AS population 
+FROM commune, statscom, labelstats 
+WHERE commune.codedep = '33' 
+AND statscom.codecom = commune.codecom 
+AND statscom.idstat = labelstats.idstat 
+AND labelstats.codestat = 'Pop' 
+AND annee = 2017 
+AND valeur >= (SELECT MAX(valeur) 
+FROM commune, statscom, labelstats 
+WHERE commune.codedep = '33' 
+AND statscom.codecom = commune.codecom 
+AND statscom.idstat = labelstats.idstat 
+AND codestat = 'Pop' 
+AND annee = 2017);
+Nested Loop
+  Join Filter: (statscom.idstat = labelstats.idstat)
+  InitPlan 1 (returns $1)
+    ->  Aggregate
+          ->  Nested Loop 
+                Join Filter: (statscom_1.idstat = labelstats_1.idstat)
+                ->  Index Scan using codestat_unique on labelstats labelstats_1
+                      Index Cond: ((codestat)::text = 'Pop'::text)
+                ->  Nested Loop
+                      ->  Seq Scan on commune commune_1
+                            Filter: ((codedep)::text = '33'::text)
+                            Rows Removed by Filter: 34416
+                      ->  Index Scan using statscom_pkey on statscom statscom_1 
+                            Index Cond: (((codecom)::text = (commune_1.codecom)::text) AND (annee = '2017'::numeric))
+  ->  Index Scan using codestat_unique on labelstats 
+        Index Cond: ((codestat)::text = 'Pop'::text)
+  ->  Nested Loop
+        ->  Seq Scan on commune 
+              Filter: ((codedep)::text = '33'::text)
+              Rows Removed by Filter: 34416
+        ->  Index Scan using statscom_pkey on statscom
+              Index Cond: (((codecom)::text = (commune.codecom)::text) AND (annee = '2017'::numeric))
+              Filter: (valeur >= $1)
+              Rows Removed by Filter: 1
+Planning Time: 0.383 ms
+Execution Time: 8.140 ms
+```
+
+Pour cette dernière requête, on a omit les détails concernant les coûts des diverses opérations pour une meilleure lisibilité.
+
+On peut les représenter les temps d’exécution de façon plus concise dans le tableau suivant&nbsp;:
 
 | Requête       | Temps d’exécution (ms) | 
-| --------------|:----------------------:| 
+| ------------- |:----------------------:| 
 | Requête 1     |         2.942          | 
 | Requête 2     |         2.583          | 
 | Requête 3     |         4.559          | 
 | Requête 4     |         0.165          |
+| Requête 5     |         8.140          |
 
-On remarque que la requête la qui prend le moins de temps à exécuter est celle où l’on utilise un index. En effet, on avait vu que son coût théorique était bien inférieur à celui des autres requêtes. Cela se confirme avec le temps d’exécution qui est environ 20 fois inférieur à celui des autres. Enfin, on note également que le temps d’exécution de la jointure est plus long. 
+On remarque que parmi les 4 premières requêtes, la requête qui prend le moins de temps à exécuter est celle où l’on utilise un index. En effet, on avait vu que son coût théorique était bien inférieur à celui des autres requêtes. Cela se confirme avec le temps d’exécution qui est environ 20 fois inférieur à celui des autres. On note également que le temps d’exécution de la jointure est plus long. La requête 5, où l’on effectue plusieurs jointures est sans surprise la requête dont l’exécution prend le plus de temps.
+
 
