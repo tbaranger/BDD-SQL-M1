@@ -171,8 +171,8 @@ On s’intéresse dans cette question à la manière dont les requêtes sont pla
 ```
 EXPLAIN SELECT * FROM commune;
 
-			     QUERY PLAN 
------------------------------------------------------------------------------------------
+		       QUERY PLAN 
+------------------------------------------------------------
 Seq Scan on commune  (cost=0.00..811.51 rows=34951 width=22)
 
 ```
@@ -185,8 +185,8 @@ Regardons ce qu’il se passe lorsqu’on effectue un filtre, avec l’ajout d�
 ```
 EXPLAIN SELECT * FROM commune WHERE codedep = ‘33’;
 
-			    QUERY PLAN 
---------------------------------------------------------------------------------------
+		      QUERY PLAN 
+----------------------------------------------------------
 Seq Scan on commune  (cost=0.00..898.89 rows=522 width=22)
 Filter: ((codedep)::text = '33'::text)
 ```
@@ -201,8 +201,8 @@ EXPLAIN SELECT codecom, nomcom, commune.codedep
 	WHERE commune.codedep = departement.codedep 
 	AND nomdep = 'Gironde';
 
-		     		QUERY PLAN 
-----------------------------------------------------------------------------------------------
+		     	     QUERY PLAN 
+---------------------------------------------------------------------
 Hash Join  (cost=2.28..909.38 rows=346 width=22)
   Hash Cond: ((commune.codedep)::text = (departement.codedep)::text)
   ->  Seq Scan on commune  (cost=0.00..811.51 rows=34951 width=22)
@@ -220,8 +220,8 @@ Finalement, si l’on veut récupérer ces communes en utilisant la clé primair
 EXPLAIN SELECT * FROM commune 
 WHERE codecom BETWEEN '33000' AND '33999';
 
-					QUERY PLAN 
---------------------------------------------------------------------------------------------------------------------
+				      QUERY PLAN 
+-----------------------------------------------------------------------------------------
 Index Scan using cle_commune on commune  (cost=0.29..8.59 rows=15 width=22)
   Index Cond: (((codecom)::text >= '33000'::text) AND ((codecom)::text <= '33999'::text))
 ```
@@ -247,8 +247,8 @@ EXPLAIN SELECT nomcom, valeur AS population
 		AND codestat = 'Pop' 
 		AND annee = 2017);
 
-							QUERY PLAN 
----------------------------------------------------------------------------------------------------------------------------
+						     QUERY PLAN 
+---------------------------------------------------------------------------------------------------------------------
 Nested Loop  (cost=4973.34..9942.56 rows=1 width=18)
   Join Filter: (statscom.idstat = labelstats.idstat)
   InitPlan 1 (returns $1)
