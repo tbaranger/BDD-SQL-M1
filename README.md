@@ -134,6 +134,19 @@ La liste des indicateurs est stockée dans la base directement, tandis que les p
 
 *Fichier 'question2_vues.py'*
 
+L’objectif principal des vues est de permettre à l’utilisateur de consulter plus facilement certaines informations, notamment des statistiques calculées, ainsi qu’une mise en forme plus intuitive que celle des relations. 
+
+Voici une description des vues que nous avons créées&nbsp;:
+
+* **stats_calculees_dep** : contient les statistiques calculées par somme (population et superficie) pour chaque département, à partir des statistiques sur les communes
+* **stats_calculees_reg** : contient les statistiques claculées par somme (population et superficie) pour chaque région, à partir de la vue ‘stats_calculees_dep’
+* **indicateurs_reg** : liste les indicateurs pour chaque région avec les descriptions associées, ce qui permet une meilleure lisibilité que la relation ‘statreg’ qui ne contient que les codes correspondant mais pas les labels des indicateurs
+* **indicateurs_dep** : idem pour les départements
+* **view_cheflieureg** : vue permettant de consulter rapidement les chefs-lieux des régions
+* **view_cheflieudep** : vue permettant de consulter rapidement les chefs-lieux des départements
+
+Nous ne sommes pas allés plus loin par manque de temps, mais on peut généraliser cette approche et créer des vues pour toutes les utilisations fréquentes de la base de données.
+
 #### Triggers
 
 *Fichier 'question3_triggers.py'*
