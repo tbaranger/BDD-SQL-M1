@@ -47,6 +47,23 @@ for d in rows:
 	print(d)
 print('\n-----------------------------')
 
+# Commune la plus peuplée en 2017
+query = ("EXPLAIN SELECT nomcom, valeur AS population "
+			"FROM commune, statscom, labelstats "
+			"WHERE commune.codedep = '33' "
+			"AND statscom.codecom = commune.codecom "
+			"AND statscom.idstat = labelstats.idstat "
+			"AND labelstats.codestat = 'Pop' "
+			"AND annee = 2017 "
+			"AND valeur >= "
+				"(SELECT MAX(valeur) FROM commune, statscom, labelstats WHERE commune.codedep = '33' AND statscom.codecom = commune.codecom AND statscom.idstat = labelstats.idstat AND codestat = 'Pop' AND annee = 2017);")
+cur.execute(query)
+rows = cur.fetchall()
+print(query)
+for d in rows:
+	print(d)
+print('\n-----------------------------')
+
 ## Partie 2- Comparaison des temps d'exécution
 
 print("\nQuestion 6.2 - Comparaison des temps d'exécution.\n")
@@ -79,6 +96,23 @@ print('\n-----------------------------')
 
 # Récupération de la liste des communes de Gironde par tri sur codecom
 query = "EXPLAIN ANALYZE SELECT * \n\tFROM commune \n\tWHERE codecom BETWEEN '33000' AND '33999';\n"
+cur.execute(query)
+rows = cur.fetchall()
+print(query)
+for d in rows:
+	print(d)
+print('\n-----------------------------')
+
+# Commune la plus peuplée en 2017
+query = ("EXPLAIN ANALYZE SELECT nomcom, valeur AS population "
+			"FROM commune, statscom, labelstats "
+			"WHERE commune.codedep = '33' "
+			"AND statscom.codecom = commune.codecom "
+			"AND statscom.idstat = labelstats.idstat "
+			"AND labelstats.codestat = 'Pop' "
+			"AND annee = 2017 "
+			"AND valeur >= "
+				"(SELECT MAX(valeur) FROM commune, statscom, labelstats WHERE commune.codedep = '33' AND statscom.codecom = commune.codecom AND statscom.idstat = labelstats.idstat AND codestat = 'Pop' AND annee = 2017);")
 cur.execute(query)
 rows = cur.fetchall()
 print(query)
