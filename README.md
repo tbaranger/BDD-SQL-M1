@@ -272,7 +272,7 @@ Nested Loop  (cost=4973.34..9942.56 rows=1 width=18)
               Filter: (valeur >= $1)
 ```
 
-On remarque que cette fois-ci, PostgreSQL réalise un <code>Nested Loop Join</code>. Il s’agit d’une méthode de jointure plus naïve que celle vue précédemment. En effet, PostgreSQL prend deux tables en entrée.  Pour chaque ligne de la première table, le programme essaie de trouver la ligne correspondante dans la seconde, selon la clause <code>WHERE</code>. Ceci continue jusqu’à ce que toutes les lignes aient leur analogue.
+On remarque que cette fois-ci, PostgreSQL réalise un <code>Nested Loop</code>. Il s’agit d’une méthode de jointure plus naïve que celle vue précédemment. En effet, PostgreSQL prend deux tables en entrée.  Pour chaque ligne de la première table, le programme essaie de trouver la ligne correspondante dans la seconde, selon la clause <code>WHERE</code>. Ceci continue jusqu’à ce que toutes les lignes aient leur analogue.
 
 ##### Comparaison des temps d’exécution
 
